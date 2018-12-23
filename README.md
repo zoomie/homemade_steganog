@@ -1,4 +1,7 @@
 # homemade_encryption
+
+Done: Simple Diffie Hellman key exchage between Alice and Bob
+
 I'm interested in making my own secure connection in golang. In the process of doing this I would like to gain a better understanding of current cryptography and network security. 
 
 The reason for this repo is that I want to understand and try use the Wireguard implementation descripbe in this whitepaper https://www.wireguard.com/papers/wireguard.pdf
