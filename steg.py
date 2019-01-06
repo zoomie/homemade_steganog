@@ -8,11 +8,12 @@ import matplotlib.pyplot as plt
 
 # img = imread('/Users/andrewarderne/work/homemade_encryption/steganog/iu.jpeg')
 
-
-
 class Steg:
     def __init__(self):
         self.settings = dict()
+        self.letters = """
+                        abcdefghijklmnopqrstuvwxyz ,.:-'"?;()!
+                       """
         # Sending variables
         self.normal_img = None
         self.encode_data = None
@@ -27,7 +28,9 @@ class Steg:
     def load_img(self, img_path):
         self.normal_img = imread(img_path)
 
-    def load_data(self, data):
+    def load_data(self, data_path):
+        with open(data_path, 'r') as f:
+            data = f.read().lower()
         self.encode_data = self._char_to_num(data)
 
     def encrypt(self):
@@ -39,10 +42,12 @@ class Steg:
 
     def _char_to_num(self, chars):
         nums = list()
-        letters= 'abcdefghijklmnopqrstuvwxyz '
-        char_num = {char: num for num, char in enumerate(letters)}
+        char_num = {char: num for num, char in enumerate(self.letters)}
         for char in chars:
-            nums.append(char_num[char])
+            if char in '1234567890': continue
+            # num = char_num.get(char, 33)
+            num = char_num[char]
+            nums.append(num)
         return nums
 
     def _create_indexs(self, data, div=20):
@@ -68,21 +73,21 @@ class Steg:
     
     def _num_to_char(self, nums):
         chars = list()
-        letters = 'abcdefghijklmnopqrstuvwxyz '
-        num_char = {num: char for num, char in enumerate(letters)}
+        num_char = {num: char for num, char in enumerate(self.letters)}
         for num in nums:
             chars.append(num_char[num])
         return chars
 
 
-data = "what ever lfdagsd"
+img_path = '/Users/andrewarderne/work/homemade_encryption/data/iu.jpeg'
+data_path = '/Users/andrewarderne/work/homemade_encryption/data/text.txt'
 s = Steg()
-s.load_img('/Users/andrewarderne/work/homemade_encryption/steganog/iu.jpeg')
-s.load_data(data)
+s.load_img(img_path)
+s.load_data(data_path)
 data_img = s.encrypt()
 
-plt.imshow(data_img)
-plt.show()
+# plt.imshow(data_img)
+# plt.show()
 
-secret_message = s.decrypt_img(data_img, s.encode_indexs)
-print(secret_message)
+# secret_message = s.decrypt_img(data_img, s.encode_indexs)
+# print(secret_message)
