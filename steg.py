@@ -14,16 +14,12 @@ class Steg:
         self.letters = """
                         abcdefghijklmnopqrstuvwxyz ,.:-'"?;()!
                        """
-        # Sending variables
         self.normal_img = None
         self.encode_data = None
         self.flat_img = None
         self.encode_indexs = None
         self.data_img = None
 
-        # Recieving variables
-        self.hidden_img = None
-        self.decode_data =  None
     
     def load_img(self, img_path):
         self.normal_img = imread(img_path)
@@ -35,6 +31,7 @@ class Steg:
 
     def encrypt(self):
         self.encode_indexs = self._create_indexs(self.normal_img, self.encode_data)
+        print(self.encode_indexs)
         self.data_img = self._input_data(self.normal_img, 
                                          self.encode_indexs, 
                                          self.encode_data)
@@ -54,18 +51,19 @@ class Steg:
         indexs = list()
         position = 0
         num = 0
-        gen = self._num_generator()
+        generator = self._num_generator(img, data)
         xs, ys, zs = img.shape
         for x in range(xs):
             for y in range(ys):
                 for z in range(zs):
-                    position += 1
                     if position == num:
                         indexs.append((x, y, z))
                         position = 0
-                        num = next(gen)
+                        num = next(generator)
+                        print(num)
+                    position += 1
                     if len(indexs) == len(data):
-                        return indexs
+                        return indexs  
 
 
     def _input_data(self, img, encode_indexs, data):
@@ -74,9 +72,14 @@ class Steg:
             img[x][y][z] = data[num]
         return img
 
-    def _num_generator(self):
+    def _num_generator(self, img, data):
+        x, y, z = img.shape
+        space = int((x*y*z)/len(data))
+        largest_space = space + 10
+        smallest_space = space - 40
         while True:
-            yield randint(1, 20)
+        #     yield 50
+            yield randint(smallest_space, largest_space)
 
 
     def decrypt_img(self, img):
@@ -100,9 +103,12 @@ s = Steg()
 s.load_img(img_path)
 s.load_data(data_path)
 other_img = s.encrypt()
-# plt.imshow(other_img)
-# plt.show()
 
+plt.imshow(other_img)
+plt.show()
+
+message = s.decrypt_img(other_img)
+print(message)
 # secret_message = s.decrypt_img(other_img)
 # print(secret_message)
 
