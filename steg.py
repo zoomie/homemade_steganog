@@ -2,7 +2,7 @@ import skimage
 from skimage import data
 from skimage.io import imread
 from numpy import array
-from random import randint as r
+from random import randint 
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -24,7 +24,7 @@ class Steg:
         # Recieving variables
         self.hidden_img = None
         self.decode_data =  None
-
+    
     def load_img(self, img_path):
         self.normal_img = imread(img_path)
 
@@ -50,17 +50,20 @@ class Steg:
             nums.append(num)
         return nums
 
-    def _create_indexs(self, img, data, div=116*2):
+    def _create_indexs(self, img, data):
         indexs = list()
         position = 0
-        print(img.shape)
+        num = 0
+        gen = self._num_generator()
         xs, ys, zs = img.shape
         for x in range(xs):
             for y in range(ys):
                 for z in range(zs):
                     position += 1
-                    if position%div==0:
+                    if position == num:
                         indexs.append((x, y, z))
+                        position = 0
+                        num = next(gen)
                     if len(indexs) == len(data):
                         return indexs
 
@@ -71,9 +74,14 @@ class Steg:
             img[x][y][z] = data[num]
         return img
 
-    def decrypt_img(self, img, encode_indexs):
+    def _num_generator(self):
+        while True:
+            yield randint(1, 20)
+
+
+    def decrypt_img(self, img):
         data = list()
-        for x, y, z in encode_indexs:
+        for x, y, z in self.encode_indexs:
             data.append(img[x, y, z])
         message = self._num_to_char(data)
         return ''.join(message)
@@ -92,8 +100,16 @@ s = Steg()
 s.load_img(img_path)
 s.load_data(data_path)
 other_img = s.encrypt()
-plt.imshow(other_img)
-plt.show()
+# plt.imshow(other_img)
+# plt.show()
 
-# secret_message = s.decrypt_img(data_img, s.encode_indexs)
+# secret_message = s.decrypt_img(other_img)
 # print(secret_message)
+
+# def plot_details(img):
+#     summer = {num: 0 for num in range(255)}
+#     flat_img = img.flattern()
+#     for num in flat_img:
+#         summer[num] += 1
+#     x_axis = 
+#     y_axis = 
