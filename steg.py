@@ -34,7 +34,7 @@ class Steg:
         self.encode_data = self._char_to_num(data)
 
     def encrypt(self):
-        self.encode_indexs = self._create_indexs(self.encode_data)
+        self.encode_indexs = self._create_indexs(self.normal_img, self.encode_data)
         self.data_img = self._input_data(self.normal_img, 
                                          self.encode_indexs, 
                                          self.encode_data)
@@ -50,13 +50,20 @@ class Steg:
             nums.append(num)
         return nums
 
-    def _create_indexs(self, data, div=20):
-        num = len(data)*div
-        xs = [i for i in range(num) if i%div==0]
+    def _create_indexs(self, img, data, div=116*2):
         indexs = list()
-        for x in xs:
-            indexs.append((x, 10, 1))
-        return indexs
+        position = 0
+        print(img.shape)
+        xs, ys, zs = img.shape
+        for x in range(xs):
+            for y in range(ys):
+                for z in range(zs):
+                    position += 1
+                    if position%div==0:
+                        indexs.append((x, y, z))
+                    if len(indexs) == len(data):
+                        return indexs
+
 
     def _input_data(self, img, encode_indexs, data):
         for num, (x, y, z) in enumerate(encode_indexs):
@@ -84,10 +91,9 @@ data_path = '/Users/andrewarderne/work/homemade_encryption/data/text.txt'
 s = Steg()
 s.load_img(img_path)
 s.load_data(data_path)
-data_img = s.encrypt()
-
-# plt.imshow(data_img)
-# plt.show()
+other_img = s.encrypt()
+plt.imshow(other_img)
+plt.show()
 
 # secret_message = s.decrypt_img(data_img, s.encode_indexs)
 # print(secret_message)
