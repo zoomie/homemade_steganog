@@ -74,9 +74,9 @@ class Steg:
 
     def _num_generator(self, img, data):
         x, y, z = img.shape
-        space = int((x*y*z)/len(data))
-        largest_space = space + 10
-        smallest_space = space - 40
+        space_between_data = int((x*y*z)/len(data))
+        largest_space = space_between_data + 10
+        smallest_space = space_between_data - 40
         while True:
         #     yield 50
             yield randint(smallest_space, largest_space)
