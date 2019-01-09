@@ -1,2 +1,2 @@
-# homemade_encryption
+# homemade_steg
 
