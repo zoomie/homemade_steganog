@@ -29,6 +29,9 @@ class Steg:
             data = f.read().lower()
         self.encode_data = self._char_to_num(data)
 
+    def load_data_binary(self, data_path):
+        pass
+
     def encrypt(self):
         self.encode_indexs = self._create_indexs(self.normal_img, self.encode_data)
         print(self.encode_indexs)
@@ -97,8 +100,8 @@ class Steg:
         return chars
 
 
-img_path = '/Users/andrewarderne/work/homemade_encryption/data/iu.jpeg'
-data_path = '/Users/andrewarderne/work/homemade_encryption/data/text.txt'
+img_path = '/Users/andrewarderne/work/homemade_steg/data/iu.jpeg'
+data_path = '/Users/andrewarderne/work/homemade_steg/data/text.txt'
 s = Steg()
 s.load_img(img_path)
 s.load_data(data_path)
