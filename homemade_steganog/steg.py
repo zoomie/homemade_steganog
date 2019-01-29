@@ -1,10 +1,5 @@
-import skimage
-from skimage import data
 from skimage.io import imread
-from numpy import array
 from random import randint 
-import numpy as np
-import matplotlib.pyplot as plt
 
 
 class Steg:
