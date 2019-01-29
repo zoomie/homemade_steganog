@@ -5,7 +5,7 @@ pip install homemade-steganog
 Example usage:
 ```python
 import matplotlib.pyplot as plt
-from homemade_steganog.steg import Steg
+from homemade_steganog import Steg
 
 img_path = '../data/img.jpeg'
 data_path = '../data/text.txt'
