@@ -1,9 +1,9 @@
 # homemade_steganog
-```
+```python
 pip install homemade-steganog
 ```
 Example usage:
-```
+```python
 import matplotlib.pyplot as plt
 from homemade_steganog.steg import Steg
 
@@ -20,7 +20,7 @@ plt.show()
 ```
 ![alt text](https://github.com/zoomie/homemade_steg/blob/master/data/img.jpeg)
 
-```
+```python
 message = s.decrypt_img(data_in_img)
 print(message)
 
