@@ -24,7 +24,7 @@ plt.show()
 message = s.decrypt_img(data_in_img)
 print(message)
 ```
-# The following text was encoded into the photo show above.
+#### The following text was encoded into the photo show above.
 
 how can entropy be reversed
 the last question by isaac asimov 1956
