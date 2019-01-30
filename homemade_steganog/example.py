@@ -1,7 +1,7 @@
 # Example usage
 import matplotlib.pyplot as plt
-from homemade_steganog import Steg
-
+# from homemade_steganog import Steg
+from steg import Steg
 img_path = '../data/img.jpeg'
 data_path = '../data/text.txt'
 s = Steg()

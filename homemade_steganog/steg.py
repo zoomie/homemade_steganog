@@ -5,14 +5,14 @@ from random import randint
 class Steg:
     def __init__(self):
         self.settings = dict()
-        self.letters = """
-                        abcdefghijklmnopqrstuvwxyz ,.:-'"?;()!
-                       """
+        self.letters =\
+        """0123456789abcdefghijklmnopqrstuvwxyz ,.:-'"?;()!"""
         self.normal_img = None
         self.encode_data = None
         self.flat_img = None
         self.encode_indexs = None
         self.data_img = None
+        self.char_num = None
 
     
     def load_img(self, img_path):
@@ -34,9 +34,10 @@ class Steg:
     def _char_to_num(self, chars):
         nums = list()
         char_num = {char: num for num, char in enumerate(self.letters)}
+        char_num['\n'] = int(len(self.letters)+1)
+        char_num['\t'] = int(len(self.letters)+2)
+        self.char_num = char_num
         for char in chars:
-            if char in '1234567890': continue
-            # num = char_num.get(char, 33)
             num = char_num[char]
             nums.append(num)
         return nums
@@ -82,7 +83,7 @@ class Steg:
     
     def _num_to_char(self, nums):
         chars = list()
-        num_char = {num: char for num, char in enumerate(self.letters)}
+        num_char = {num: char for char, num in self.char_num.items()}
         for num in nums:
             chars.append(num_char[num])
         return chars
