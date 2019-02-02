@@ -3,6 +3,10 @@ from random import randint
 
 
 class Steg:
+    """
+    This class encodes text data into an 
+    image. 
+    """
     def __init__(self):
         self.settings = dict()
         self.letters =\
@@ -16,14 +20,25 @@ class Steg:
 
     
     def load_img(self, img_path):
+        """
+        Input the path to the image file
+        """
         self.normal_img = imread(img_path)
 
     def load_data(self, data_path):
+        """
+        Input path to the txt file
+        """
         with open(data_path, 'r') as f:
             data = f.read().lower()
         self.encode_data = self._char_to_num(data)
 
     def encrypt(self):
+        """
+        The encrypt methods encoded the data into
+        the image by changing pixels value, the index 
+        is chosen base on the random number generator.
+        """
         self.encode_indexs = self._create_indexs(self.normal_img, 
                                                  self.encode_data)
         self.data_img = self._input_data(self.normal_img, 
@@ -65,6 +80,10 @@ class Steg:
             img[x][y][z] = data[num]
         return img
 
+    """
+    The following generator specifies where the 
+    index of the encoded data.
+    """
     def _num_generator(self, img, data):
         x, y, z = img.shape
         space_between_data = int((x*y*z)/len(data))
