@@ -5,9 +5,9 @@ from steg import Steg
 class Package_test(unittest.TestCase):
 
     def test_steg(self):
-        input_text = 'a string of text'
+        input_text = 'a string of text with nums 10931,.'
         s = Steg()
-        s.encode_data = s._char_to_num('a string of text')
+        s.encode_data = s._char_to_num(input_text)
         s.load_img('../data/img.jpeg')
         img = s.encrypt()
         output_text = s.decrypt_img(img)

@@ -3,27 +3,42 @@ from random import randint
 
 
 class Steg:
+    """
+    This class encodes text data into an 
+    image. 
+    """
     def __init__(self):
         self.settings = dict()
-        self.letters = """
-                        abcdefghijklmnopqrstuvwxyz ,.:-'"?;()!
-                       """
+        self.letters =\
+        """0123456789abcdefghijklmnopqrstuvwxyz ,.:-'"?;()!"""
         self.normal_img = None
         self.encode_data = None
         self.flat_img = None
         self.encode_indexs = None
         self.data_img = None
+        self.char_num = None
 
     
     def load_img(self, img_path):
+        """
+        Input the path to the image file
+        """
         self.normal_img = imread(img_path)
 
     def load_data(self, data_path):
+        """
+        Input path to the txt file
+        """
         with open(data_path, 'r') as f:
             data = f.read().lower()
         self.encode_data = self._char_to_num(data)
 
     def encrypt(self):
+        """
+        The encrypt methods encoded the data into
+        the image by changing pixels value, the index 
+        is chosen base on the random number generator.
+        """
         self.encode_indexs = self._create_indexs(self.normal_img, 
                                                  self.encode_data)
         self.data_img = self._input_data(self.normal_img, 
@@ -34,9 +49,10 @@ class Steg:
     def _char_to_num(self, chars):
         nums = list()
         char_num = {char: num for num, char in enumerate(self.letters)}
+        char_num['\n'] = int(len(self.letters)+1)
+        char_num['\t'] = int(len(self.letters)+2)
+        self.char_num = char_num
         for char in chars:
-            if char in '1234567890': continue
-            # num = char_num.get(char, 33)
             num = char_num[char]
             nums.append(num)
         return nums
@@ -64,6 +80,10 @@ class Steg:
             img[x][y][z] = data[num]
         return img
 
+    """
+    The following generator specifies where the 
+    index of the encoded data.
+    """
     def _num_generator(self, img, data):
         x, y, z = img.shape
         space_between_data = int((x*y*z)/len(data))
@@ -82,7 +102,7 @@ class Steg:
     
     def _num_to_char(self, nums):
         chars = list()
-        num_char = {num: char for num, char in enumerate(self.letters)}
+        num_char = {num: char for char, num in self.char_num.items()}
         for num in nums:
             chars.append(num_char[num])
         return chars
