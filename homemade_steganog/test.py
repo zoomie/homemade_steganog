@@ -1,13 +1,13 @@
 import unittest
-from steg import Steg
+from main import Steg
 
 
 class Package_test(unittest.TestCase):
 
-    def test_steg(self):
-        input_text = 'a string of text with nums 10931,.'
+    def test_integration(self):
+        input_text = 'this is a small test'
         s = Steg()
-        s.encode_data = s._char_to_num(input_text)
+        s.load_data('../data/small.txt')
         s.load_img('../data/img.jpeg')
         img = s.encrypt()
         output_text = s.decrypt_img(img)

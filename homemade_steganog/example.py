@@ -14,5 +14,6 @@ data_in_img = s.encrypt()
 plt.imshow(data_in_img)
 plt.show()
 
-message = s.decrypt_img(data_in_img)
+s_new = Steg()
+message = s_new.decrypt_img(data_in_img)
 print(message)
