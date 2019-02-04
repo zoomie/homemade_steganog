@@ -4,8 +4,10 @@ from random import randint
 
 class Steg:
     """
-    This class encodes text data into an 
-    image. 
+    The class Steg encodes text data into an image.
+    The text is transformed into numbers, these 
+    numbers are then inserted into specific image 
+    pixel locations. 
     """
     def __init__(self):
         self.letters =\
@@ -17,15 +19,13 @@ class Steg:
 
     def load_img(self, img_path):
         """
-        Input the path to the image file
+        Loads the image.
         """
         self.input_img = imread(img_path)
 
     def load_data(self, data_path, ending_numbers=None):
         """
-        Input path to the txt file.
-        Add the number of digits to the
-        start of the data.
+        Loads the data and converts it into digits.
         """
         with open(data_path, 'r') as f:
             data = f.read().lower()
@@ -44,14 +44,17 @@ class Steg:
             nums.append(num)
         return nums
 
-    def encrypt(self, num_generator=None):
+    def encrypt(self, custom_indexes=None):
         """
-        The encrypt methods encoded the data into
+        The encrypt method encodes the data into
         the image by changing pixels value, the index 
-        is chosen base on the random number generator.
-        The encryption and decryption methods must both
-        use the same num_generator.
+        is chosen by the num_generator.
         """
+        if custom_indexes:
+            num_generator = self.custom_index_generator(custom_indexes)
+        else:
+            num_generator = self.default_index_generator()
+
         index_gen = self._yield_indexs(self.input_img, 
                                        num_generator)
         data_in_img = self._input_data(self.input_img, 
@@ -59,9 +62,7 @@ class Steg:
                                        index_gen)
         return data_in_img
 
-    def _yield_indexs(self, img, num_generator=None):
-        if not num_generator:
-            num_generator = self.default_num_generator()
+    def _yield_indexs(self, img, num_generator):
         indexs = list()
         position = 0
         num = 0
@@ -83,12 +84,15 @@ class Steg:
             img[x][y][z] = digit
         return img
 
-    def decrypt_img(self, img, num_generator=None):
+    def decrypt_img(self, img, custom_indexes=None):
         """
         Extracts text from the image.
         """
-        if not num_generator:
-            num_generator = self.default_num_generator()
+        if custom_indexes:
+            num_generator = self.custom_index_generator(custom_indexes)
+        else:
+            num_generator = self.default_index_generator()
+
         index_gen = self._yield_indexs(img, num_generator)
         data = list()
         for i, (x, y, z) in enumerate(index_gen):
@@ -109,10 +113,11 @@ class Steg:
             chars.append(num_char[num])
         return chars
 
-    def default_num_generator(self):
-        """
-        The following generator specifies where the 
-        index of the encoded data.
-        """
+    def default_index_generator(self):
         while True:
             yield 184
+    
+    def custom_index_generator(self, custom_numbers):
+        while True:
+            for num in custom_numbers:
+                yield num

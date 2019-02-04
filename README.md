@@ -1,8 +1,10 @@
 # homemade_steganog
+[Documentation](https://homemade-steganog.readthedocs.io/en/latest/)
+
 ```
 pip install homemade-steganog
 ```
-Example usage:
+Example:
 ```python
 import matplotlib.pyplot as plt
 from homemade_steganog import Steg

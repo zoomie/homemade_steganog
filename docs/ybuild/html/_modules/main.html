@@ -39,108 +39,123 @@
 
 <div class="viewcode-block" id="Steg"><a class="viewcode-back" href="../index.html#main.Steg">[docs]</a><span class="k">class</span> <span class="nc">Steg</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This class encodes text data into an </span>
-<span class="sd">    image. </span>
+<span class="sd">    The class Steg encodes text data into an image.</span>
+<span class="sd">    The text is transformed into numbers, these </span>
+<span class="sd">    numbers are then inserted into specific image </span>
+<span class="sd">    pixel locations. </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">letters</span> <span class="o">=</span>\
         <span class="sd">&quot;&quot;&quot;0123456789abcdefghijklmnopqrstuvwxyz ,.:-&#39;&quot;?;()!&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">normal_img</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_img</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">encode_data</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">flat_img</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">encode_indexs</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_img</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">char_num</span> <span class="o">=</span> <span class="kc">None</span>
 
-    
 <div class="viewcode-block" id="Steg.load_img"><a class="viewcode-back" href="../index.html#main.Steg.load_img">[docs]</a>    <span class="k">def</span> <span class="nf">load_img</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">img_path</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Input the path to the image file</span>
+<span class="sd">        Loads the image.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">normal_img</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_img</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Steg.load_data"><a class="viewcode-back" href="../index.html#main.Steg.load_data">[docs]</a>    <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_path</span><span class="p">):</span>
+<div class="viewcode-block" id="Steg.load_data"><a class="viewcode-back" href="../index.html#main.Steg.load_data">[docs]</a>    <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_path</span><span class="p">,</span> <span class="n">ending_numbers</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Input path to the txt file</span>
+<span class="sd">        Loads the data and converts it into digits.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">encode_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_char_to_num</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Steg.encrypt"><a class="viewcode-back" href="../index.html#main.Steg.encrypt">[docs]</a>    <span class="k">def</span> <span class="nf">encrypt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        The encrypt methods encoded the data into</span>
-<span class="sd">        the image by changing pixels value, the index </span>
-<span class="sd">        is chosen base on the random number generator.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">encode_indexs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_indexs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">normal_img</span><span class="p">,</span> 
-                                                 <span class="bp">self</span><span class="o">.</span><span class="n">encode_data</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data_img</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">normal_img</span><span class="p">,</span> 
-                                         <span class="bp">self</span><span class="o">.</span><span class="n">encode_indexs</span><span class="p">,</span> 
-                                         <span class="bp">self</span><span class="o">.</span><span class="n">encode_data</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_img</span></div>
+        <span class="n">data_in_nums</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_char_to_num</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ending_numbers</span><span class="p">:</span>
+            <span class="n">ending_numbers</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">99</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encode_data</span> <span class="o">=</span> <span class="n">data_in_nums</span> <span class="o">+</span> <span class="n">ending_numbers</span></div>
 
     <span class="k">def</span> <span class="nf">_char_to_num</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chars</span><span class="p">):</span>
         <span class="n">nums</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
         <span class="n">char_num</span> <span class="o">=</span> <span class="p">{</span><span class="n">char</span><span class="p">:</span> <span class="n">num</span> <span class="k">for</span> <span class="n">num</span><span class="p">,</span> <span class="n">char</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">letters</span><span class="p">)}</span>
         <span class="n">char_num</span><span class="p">[</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">letters</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">char_num</span><span class="p">[</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">letters</span><span class="p">)</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">char_num</span> <span class="o">=</span> <span class="n">char_num</span>
         <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">chars</span><span class="p">:</span>
             <span class="n">num</span> <span class="o">=</span> <span class="n">char_num</span><span class="p">[</span><span class="n">char</span><span class="p">]</span>
             <span class="n">nums</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">nums</span>
 
-    <span class="k">def</span> <span class="nf">_create_indexs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">img</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<div class="viewcode-block" id="Steg.encrypt"><a class="viewcode-back" href="../index.html#main.Steg.encrypt">[docs]</a>    <span class="k">def</span> <span class="nf">encrypt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">custom_indexes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The encrypt method encodes the data into</span>
+<span class="sd">        the image by changing pixels value, the index </span>
+<span class="sd">        is chosen by the num_generator.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">custom_indexes</span><span class="p">:</span>
+            <span class="n">num_generator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">custom_index_generator</span><span class="p">(</span><span class="n">custom_indexes</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">num_generator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_index_generator</span><span class="p">()</span>
+
+        <span class="n">index_gen</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_yield_indexs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_img</span><span class="p">,</span> 
+                                       <span class="n">num_generator</span><span class="p">)</span>
+        <span class="n">data_in_img</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_img</span><span class="p">,</span> 
+                                       <span class="bp">self</span><span class="o">.</span><span class="n">encode_data</span><span class="p">,</span> 
+                                       <span class="n">index_gen</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">data_in_img</span></div>
+
+    <span class="k">def</span> <span class="nf">_yield_indexs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">img</span><span class="p">,</span> <span class="n">num_generator</span><span class="p">):</span>
         <span class="n">indexs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
         <span class="n">position</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">num</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">generator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_num_generator</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
         <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">zs</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span>
         <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">xs</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ys</span><span class="p">):</span>
                 <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">zs</span><span class="p">):</span>
                     <span class="k">if</span> <span class="n">position</span> <span class="o">==</span> <span class="n">num</span><span class="p">:</span>
-                        <span class="n">indexs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">))</span>
+                        <span class="k">yield</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span>
                         <span class="n">position</span> <span class="o">=</span> <span class="mi">0</span>
-                        <span class="n">num</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">generator</span><span class="p">)</span>
+                        <span class="n">num</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">num_generator</span><span class="p">)</span>
                     <span class="n">position</span> <span class="o">+=</span> <span class="mi">1</span>
-                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">indexs</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-                        <span class="k">return</span> <span class="n">indexs</span>  
 
-
-    <span class="k">def</span> <span class="nf">_input_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">img</span><span class="p">,</span> <span class="n">encode_indexs</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">num</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">encode_indexs</span><span class="p">):</span>
-            <span class="n">img</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">][</span><span class="n">z</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">num</span><span class="p">]</span>
+    <span class="k">def</span> <span class="nf">_input_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">img</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">index_gen</span><span class="p">):</span>
+        <span class="c1"># zip loops to the lenght of the smallest </span>
+        <span class="c1"># iterable, therefore it will stop at the </span>
+        <span class="c1"># end of data</span>
+        <span class="k">for</span> <span class="n">digit</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">index_gen</span><span class="p">):</span>
+            <span class="n">img</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">][</span><span class="n">z</span><span class="p">]</span> <span class="o">=</span> <span class="n">digit</span>
         <span class="k">return</span> <span class="n">img</span>
 
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    The following generator specifies where the </span>
-<span class="sd">    index of the encoded data.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">_num_generator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">img</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span>
-        <span class="n">space_between_data</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="o">*</span><span class="n">z</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
-        <span class="n">largest_space</span> <span class="o">=</span> <span class="n">space_between_data</span> <span class="o">+</span> <span class="mi">10</span>
-        <span class="n">smallest_space</span> <span class="o">=</span> <span class="n">space_between_data</span> <span class="o">-</span> <span class="mi">40</span>
-        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-        <span class="c1">#     yield 50</span>
-            <span class="k">yield</span> <span class="n">randint</span><span class="p">(</span><span class="n">smallest_space</span><span class="p">,</span> <span class="n">largest_space</span><span class="p">)</span>
+<div class="viewcode-block" id="Steg.decrypt_img"><a class="viewcode-back" href="../index.html#main.Steg.decrypt_img">[docs]</a>    <span class="k">def</span> <span class="nf">decrypt_img</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">img</span><span class="p">,</span> <span class="n">custom_indexes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extracts text from the image.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">custom_indexes</span><span class="p">:</span>
+            <span class="n">num_generator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">custom_index_generator</span><span class="p">(</span><span class="n">custom_indexes</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">num_generator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_index_generator</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">decrypt_img</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">img</span><span class="p">):</span>
+        <span class="n">index_gen</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_yield_indexs</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">num_generator</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">encode_indexs</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">index_gen</span><span class="p">):</span>
             <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">img</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">10</span> <span class="ow">and</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">99</span> <span class="ow">and</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># Remove the ending values</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+                <span class="k">break</span>
         <span class="n">message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_num_to_char</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-        <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
     
     <span class="k">def</span> <span class="nf">_num_to_char</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nums</span><span class="p">):</span>
         <span class="n">chars</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-        <span class="n">num_char</span> <span class="o">=</span> <span class="p">{</span><span class="n">num</span><span class="p">:</span> <span class="n">char</span> <span class="k">for</span> <span class="n">char</span><span class="p">,</span> <span class="n">num</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">char_num</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="n">num_char</span> <span class="o">=</span> <span class="p">{</span><span class="n">num</span><span class="p">:</span> <span class="n">char</span> <span class="k">for</span> <span class="n">num</span><span class="p">,</span> <span class="n">char</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">letters</span><span class="p">)}</span>
+        <span class="n">num_char</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">letters</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="n">num_char</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">letters</span><span class="p">)</span><span class="o">+</span><span class="mi">2</span><span class="p">)]</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span>
         <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">:</span>
             <span class="n">chars</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">num_char</span><span class="p">[</span><span class="n">num</span><span class="p">])</span>
-        <span class="k">return</span> <span class="n">chars</span></div>
+        <span class="k">return</span> <span class="n">chars</span>
+
+    <span class="k">def</span> <span class="nf">default_index_generator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="mi">184</span>
+    
+    <span class="k">def</span> <span class="nf">custom_index_generator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">custom_numbers</span><span class="p">):</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">custom_numbers</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">num</span></div>
 </pre></div>
 
           </div>
@@ -197,7 +212,7 @@
       &copy;2019, Andrew Arderne.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.3</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.4</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

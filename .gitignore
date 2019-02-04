@@ -1,2 +1,4 @@
 venv
-homemade_steganog/__pycache__
+*.pyc
+.vscode
+dist
