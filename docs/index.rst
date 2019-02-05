@@ -34,15 +34,15 @@ Sending a text file hidden in an image::
     img_path = '../data/img.jpeg'
     data_path = '../data/text.txt'
     s = Steg()
-    s.load_img(img_path)
-    s.load_data(data_path)
-    data_in_img = s.encrypt()
+    image = s.load_img(img_path)
+    data = s.load_text(data_path)
+    data_in_img = s.encrypt(image, data)
 
     from matplotlib.pyplot as plt
     plt.imshow(data_in_img)
     plt.show()
 
-.. image:: ../data/img.jpeg
+.. image:: ../data/data_in_img.png
     :width: 600px
     :align: center
     :height: 400px
@@ -52,6 +52,7 @@ On the second users machine::
     from homemade_steganog import Steg
     s_new = Steg()
     # Recieve data_in_img
+    data_in_img = s_new.load_img('../data/data_in_img.png')
     message = s_new.decrypt_img(data_in_img)
 
 Custom example
@@ -61,21 +62,20 @@ Using custom_indexs specifies the locations
 is hidden::
 
     img_path = '../data/img.jpeg'
-    data_path = '../data/text.txt'
+    data_path = '../data/short_story.txt'
     s = Steg()
-    s.load_img(img_path)
-    s.load_data(data_path)
-    custom_indexs = [145, 82, 39, 94, 109]
-    data_in_img = s.encrypt(custom_indexs)
+    image = s.load_img(img_path)
+    data = s.load_text(data_path)
 
+    custom_indexs = [145, 82, 39, 94, 109]
+    data_in_img = s.encrypt(image, data, custom_indexs)
+    s.save_img('../data/data_in_img.png', data_in_img)
     # Send image here
-    plt.imshow(data_in_img)
-    plt.show()
 
+    # New machine
     s_new = Steg()
-    custom_indexs = [145, 82, 39, 94, 109]
+    img = s_new.load_img('../data/data_in_img.png')
     message = s_new.decrypt_img(data_in_img, custom_indexs)
-    print(message)
 
 
 License

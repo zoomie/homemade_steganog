@@ -2,3 +2,5 @@ venv
 *.pyc
 .vscode
 dist
+docs/ybuild/
+data/tests/

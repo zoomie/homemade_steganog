@@ -1,4 +1,4 @@
-from skimage.io import imread
+from skimage.io import imread, imsave
 from random import randint 
 
 
@@ -11,7 +11,7 @@ class Steg:
     """
     def __init__(self):
         self.letters =\
-        """0123456789abcdefghijklmnopqrstuvwxyz ,.:-'"?;()!"""
+        """0123456789aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ ,.:-'"?;()!/\\"""
         self.input_img = None
         self.encode_data = None
         self.data_img = None
@@ -21,18 +21,26 @@ class Steg:
         """
         Loads the image.
         """
-        self.input_img = imread(img_path)
+        image =  imread(img_path)
+        return image
 
-    def load_data(self, data_path, ending_numbers=None):
+    def save_img(self, output_path, image):
+        """
+        Saves image to file.
+        """
+        imsave(output_path, image)
+
+    def load_text(self, data_path, ending_numbers=None):
         """
         Loads the data and converts it into digits.
         """
         with open(data_path, 'r') as f:
-            data = f.read().lower()
+            data = f.read()
         data_in_nums = self._char_to_num(data)
         if not ending_numbers:
             ending_numbers = [0, 99]
-        self.encode_data = data_in_nums + ending_numbers
+        encode_data = data_in_nums + ending_numbers
+        return encode_data
 
     def _char_to_num(self, chars):
         nums = list()
@@ -44,7 +52,7 @@ class Steg:
             nums.append(num)
         return nums
 
-    def encrypt(self, custom_indexes=None):
+    def encrypt(self, image, data, custom_indexes=None):
         """
         The encrypt method encodes the data into
         the image by changing pixels value, the index 
@@ -55,11 +63,8 @@ class Steg:
         else:
             num_generator = self.default_index_generator()
 
-        index_gen = self._yield_indexs(self.input_img, 
-                                       num_generator)
-        data_in_img = self._input_data(self.input_img, 
-                                       self.encode_data, 
-                                       index_gen)
+        index_gen = self._yield_indexs(image, num_generator)
+        data_in_img = self._input_data(image, data, index_gen)
         return data_in_img
 
     def _yield_indexs(self, img, num_generator):
@@ -121,3 +126,4 @@ class Steg:
         while True:
             for num in custom_numbers:
                 yield num
+            
