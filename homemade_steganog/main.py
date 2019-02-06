@@ -124,6 +124,5 @@ class Steg:
     
     def custom_index_generator(self, custom_numbers):
         while True:
-            for num in custom_numbers:
-                yield num
+            yield from custom_numbers
             
